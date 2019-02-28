@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 class ProfileCreds extends Component {
   renderDesc = exp => {
@@ -18,7 +20,9 @@ class ProfileCreds extends Component {
   };
 
   render() {
-    const { experience, education } = this.props;
+    const { experience, education, user, auth } = this.props;
+
+    console.log("props:", this.props);
 
     const expItems = experience.reverse().map(exp => (
       <li key={exp._id} className="list-group-item">
@@ -53,11 +57,13 @@ class ProfileCreds extends Component {
           )}
         </p>
 
-        <div className="btn-group mb-4" role="group">
-          <Link to={`/edit-experience/${exp._id}`} className="btn btn-info">
-            Edit Experience
-          </Link>
-        </div>
+        {user._id === auth.user.id ? (
+          <div className="btn-group mb-4" role="group">
+            <Link to={`/edit-experience/${exp._id}`} className="btn btn-info">
+              Edit Experience
+            </Link>
+          </div>
+        ) : null}
       </li>
     ));
 
@@ -85,11 +91,13 @@ class ProfileCreds extends Component {
             </span>
           )}
         </p>
-        <div className="btn-group mb-4" role="group">
-          <Link to={`/edit-education/${edu._id}`} className="btn btn-info">
-            Edit Education
-          </Link>
-        </div>
+        {user._id === auth.user.id ? (
+          <div className="btn-group mb-4" role="group">
+            <Link to={`/edit-education/${edu._id}`} className="btn btn-info">
+              Edit Education
+            </Link>
+          </div>
+        ) : null}
       </li>
     ));
     return (
@@ -116,4 +124,12 @@ class ProfileCreds extends Component {
   }
 }
 
-export default ProfileCreds;
+ProfileCreds.propTypes = {
+  auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(ProfileCreds);
