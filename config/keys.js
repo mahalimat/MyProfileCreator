@@ -1,3 +1,5 @@
-module.exports = {
-  mongoURI: "mongodb://niveka:niveka123@ds161391.mlab.com:61391/profile_creator"
-};
+if (process.env.NODE_ENV === "production") {
+  module.exports = require("./keys_prod");
+} else {
+  module.exports = require("./keys_dev");
+}
